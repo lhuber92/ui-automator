@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p style="margin-top: 300px;">UI Automator - Powered by Open AI API</p>
+    <button id="button1" onclick="alert('Button 1 clicked!')">Button 1</button>
+    <button id="button2" onclick="alert('Button 2 clicked!')">Button 2</button>
+
+    <input type="text" id="jsprompt" placeholder="Enter a command">
+    <button onclick="generateJS()">Do it for me!</button>
+
+    <script>
+        async function generateJS() {
+            const jsprompt = document.getElementById('jsprompt').value;
+            const response = await fetch('http://localhost:8200/chat/jsprompt', {
+                method: 'POST',
+                body: JSON.stringify({ jsprompt: jsprompt }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            
+            if (!response.ok) {
+                alert('Error generating JS code.');
+                return;
+            }
+            
+            // user input: please click on button 1
+            const jsCode = (await response.text()).trim();
+            console.log(jsCode); // outputs "document.getElementById('button1').click()"
+            // eval("document.getElementById('button1').click()"); 
+
+            // Remove quotes from around the JavaScript command
+            const jsCodeWithoutQuotes = jsCode.replace(/(^")|("$)/g, '');
+            console.log(jsCodeWithoutQuotes); // should output document.getElementById('button1').click()
+
+            eval(jsCodeWithoutQuotes); 
+        }
+    </script>
+</body>
+</html>
