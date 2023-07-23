@@ -3,7 +3,7 @@ const chatUtil = new ChatUtil()
 const openai = chatUtil.getOpenai()
 
 export class ChatService {
-  async jsprompt(message) {
+  async jsprompt(message, htmlCode) {
     try {
       const harmful = await chatUtil.evaluateHarm(message);
       if (harmful || !chatUtil.validateInput(message)) {
@@ -36,7 +36,10 @@ export class ChatService {
         </body>
       </html>
       
-      If the user asks "I want to click on button 1" you should reply with "document.getElementById('button1').click()" and nothing more. Please note that I used single-quotes for ('button1'). 
+      If the user asks "I want to click on button 1" you should reply with "document.getElementById('button1').click()" and nothing more. Please note that I used single-quotes for ('button1').
+
+      Here is the HTML code provided by the user:
+      ${htmlCode}
       `
 
       const openaiResult = await openai.createChatCompletion({

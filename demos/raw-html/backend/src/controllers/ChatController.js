@@ -7,9 +7,9 @@ export class ChatController {
     try {
       console.log('eew')
       console.log(req.body)
-      const { jsprompt } = req.body;
+      const { jsprompt, htmlCode } = req.body;
       console.log(jsprompt)
-      const answer = await chatService.jsprompt(jsprompt);
+      const answer = await chatService.jsprompt(jsprompt, htmlCode);
       console.log(answer)
       res.status(200).send((JSON.stringify(answer)))
     } catch (error) {

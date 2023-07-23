@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import ThreeItemGrid from '$components/ThreeItemGrid.svelte';
   import Carousel from '$components/Carousel.svelte';
   import ChatBox from '$components/ChatBox.svelte'; // Import ChatBox here
@@ -10,23 +11,22 @@
   $: featuredCollection = data.products[1]?.node?.products?.edges;
   console.log('111')
 
-  async function generateJS() {
-      const jsprompt = document.getElementById('jsprompt').value;
-      const response = await fetch('http://localhost:8200/chat/jsprompt', {
-          method: 'POST',
-          body: JSON.stringify({ jsprompt: jsprompt }),
-          headers: { 'Content-Type': 'application/json' },
-      });
-      
-      if (!response.ok) {
-          alert('Error generating JS code.');
-          return;
-      }
-      
-      const jsCode = (await response.text()).trim();
-      const jsCodeWithoutQuotes = jsCode.replace(/(^")|("$)/g, '');
-      eval(jsCodeWithoutQuotes); 
-  }
+  let htmlCode = "";
+
+  onMount(() => {
+    let bodyHTML = document.body.innerHTML;
+    let domParser = new DOMParser();
+    let docElement = domParser.parseFromString(bodyHTML, 'text/html');
+
+    // Remove script and style tags
+    let scripts = [...docElement.getElementsByTagName('script')];
+    let styles = [...docElement.getElementsByTagName('style')];
+    scripts.forEach(script => script.parentNode.removeChild(script));
+    styles.forEach(style => style.parentNode.removeChild(style));
+
+    htmlCode = docElement.body.innerHTML;
+    console.log(htmlCode)
+  });
 </script>
 
 <svelte:head>
@@ -53,7 +53,6 @@
       </div>
       <div>
         <div class="lg:text-2xl">
-          <p>Powered by UI Automator!</p>
           <p>Welcome to the Next.js Enthusiast Webshop – the one-stop online shop for all things Next.js!
           </p>
           <p>Here, we're not just about selling merchandise. We're a community of passionate developers and enthusiasts who live and breathe Next.js. Our store is a celebration of the powerful JavaScript framework that has helped us create fantastic server-side rendering and static site generation applications.
@@ -67,7 +66,9 @@
   </section>
   <section>
     <div class="text-black">
-      <ChatBox {generateJS} />
+      {#if htmlCode} <!-- Only render ChatBox if htmlCode is populated -->
+        <ChatBox htmlCode={htmlCode} />
+      {/if}
     </div>
   </section>
 </main>

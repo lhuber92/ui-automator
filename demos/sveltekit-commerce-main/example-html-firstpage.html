@@ -1,0 +1,352 @@
+<div id="svelte">
+  <main class="min-h-screen text-white overflow-hidden">
+    <nav class="flex items-center border-b border-zinc-700 p-4 lg:px-6">
+      <div class="flex w-1/3 items-center">
+        <div class="mr-4 active">
+          <a href="/" data-sveltekit-prefetch="" class=""
+            ><picture
+              ><source srcset="/svelte_logo.png" type="image/png" />
+              <img
+                alt="Svelte Logo"
+                class="h-[38] w-[32]"
+                decoding="async"
+                height="38"
+                loading="eager"
+                src="/svelte_logo.png"
+                width="32" /></picture
+          ></a>
+        </div>
+        <div class="hidden lg:flex">
+          <div>
+            <a
+              data-sveltekit-prefetch=""
+              href="/search"
+              class="hover:opacity-100 px-2 py-1 text-white rounded-lg opacity-75"
+              >All</a
+            >
+          </div>
+          <div>
+            <a
+              data-sveltekit-prefetch=""
+              href="/search/featured"
+              class="hover:opacity-100 px-2 py-1 text-white rounded-lg opacity-75"
+              >Featured</a
+            >
+          </div>
+          <div>
+            <a
+              data-sveltekit-prefetch=""
+              href="/search/clothes"
+              class="hover:opacity-100 px-2 py-1 text-white rounded-lg opacity-75"
+              >Apparel</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="hidden w-1/3 lg:block">
+        <form class="relative flex w-full items-center s-ZL7NkPLcTGAZ">
+          <div class="absolute top-0 right-0 mr-2 s-ZL7NkPLcTGAZ">
+            <div>
+              <svg style="width:24px;;height:24px;" viewBox="0 0 24 24">
+                <path
+                  fill="#fff"
+                  d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
+                ></path>
+              </svg>
+            </div>
+            <!--<Icons>-->
+          </div>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search for products..."
+            autocomplete="off"
+            class="w-full border border-white/30 bg-transparent p-2 s-ZL7NkPLcTGAZ"
+          />
+        </form>
+        <!--<SearchBar>-->
+      </div>
+      <div class="ml-auto flex items-center">
+        <button class="relative my-2 mx-4">
+          <div>
+            <svg
+              width="20"
+              height="22"
+              viewBox="0 0 20 22"
+              fill="none"
+              stroke="#fff"
+            >
+              <path
+                d="M4 1L1 5V19C1 19.5304 1.21071 20.0391 1.58579 20.4142C1.96086 20.7893 2.46957 21 3 21H17C17.5304 21 18.0391 20.7893 18.4142 20.4142C18.7893 20.0391 19 19.5304 19 19V5L16 1H4Z"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+              <path
+                d="M1 5H19"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+              <path
+                d="M14 9C14 10.0609 13.5786 11.0783 12.8284 11.8284C12.0783 12.5786 11.0609 13 10 13C8.93913 13 7.92172 12.5786 7.17157 11.8284C6.42143 11.0783 6 10.0609 6 9"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </div>
+          <!--<Icons>-->
+          <div
+            data-test="cart-quantity"
+            class="absolute bottom-0 left-0 -ml-3 -mb-3 flex h-5 w-5 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
+          ></div>
+        </button>
+        <button aria-label="Open menu" class="lg:hidden">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="#fff"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </div>
+          <!--<Icons>-->
+        </button>
+      </div>
+    </nav>
+    <!--<Header>-->
+    <div class="min-h-screen overflow-hidden">
+      <main>
+        <section>
+          <div class="lg:h-[90vh]">
+            <div class="flex flex-col lg:h-full lg:flex-row">
+              <div class="h-[60vh] w-full bg-dark lg:h-full lg:w-2/3">
+                <div class="h-full w-full overflow-hidden">
+                  <a
+                    data-test="grid-tile"
+                    href="/product/acme-cup"
+                    data-sveltekit-prefetch=""
+                    class="focus:border-blue-500 focus:border-2 relative flex h-full w-full items-center justify-center"
+                    ><img
+                      alt="ACME Cup"
+                      class="w-full md:w-1/2 lg:w-full flex-none transition duration-300 ease-in-out"
+                      fetchpriority="high"
+                      decoding="async"
+                      loading="eager"
+                      src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/Cup-front-black.png?v=1623159405"
+                    />
+                    <div class="absolute top-0 left-0">
+                      <div class="bg-black p-3 text-2xl font-medium">
+                        ACME Cup
+                      </div>
+                      <div class="w-fit bg-black p-3 text-sm">$25.0 USD</div>
+                    </div></a
+                  >
+                </div>
+                <!--<GridTile>-->
+              </div>
+              <div class="w-full lg:h-full lg:w-1/3">
+                <div class="h-[60vh] w-full bg-light lg:h-1/2">
+                  <div class="h-full w-full overflow-hidden">
+                    <a
+                      data-test="grid-tile"
+                      href="/product/quarter-zip"
+                      data-sveltekit-prefetch=""
+                      class="focus:border-blue-500 focus:border-2 relative flex h-full w-full items-center justify-center"
+                      ><img
+                        alt="Quarter Zip"
+                        class="w-full md:w-1/2 lg:w-full flex-none transition duration-300 ease-in-out"
+                        fetchpriority="high"
+                        decoding="async"
+                        loading="eager"
+                        src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/QZSide-Model.png?v=1623256247"
+                      />
+                      <div class="absolute top-0 left-0">
+                        <div class="bg-black p-3 text-2xl font-medium">
+                          Quarter Zip
+                        </div>
+                        <div class="w-fit bg-black p-3 text-sm">$90.0 USD</div>
+                      </div></a
+                    >
+                  </div>
+                  <!--<GridTile>-->
+                </div>
+                <div class="h-[60vh] w-full bg-svelteOrange lg:h-1/2">
+                  <div class="h-full w-full overflow-hidden">
+                    <a
+                      data-test="grid-tile"
+                      href="/product/sticker"
+                      data-sveltekit-prefetch=""
+                      class="focus:border-blue-500 focus:border-2 relative flex h-full w-full items-center justify-center"
+                      ><img
+                        alt="Sticker"
+                        class="w-full md:w-1/2 lg:w-full flex-none transition duration-300 ease-in-out"
+                        fetchpriority="high"
+                        decoding="async"
+                        loading="eager"
+                        src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/Sticker-mock.png?v=1623256356"
+                      />
+                      <div class="absolute top-0 left-0">
+                        <div class="bg-black p-3 text-2xl font-medium">
+                          Sticker
+                        </div>
+                        <div class="w-fit bg-black p-3 text-sm">$0.0 USD</div>
+                      </div></a
+                    >
+                  </div>
+                  <!--<GridTile>-->
+                </div>
+              </div>
+            </div>
+            <!--<ThreeItemGrid>-->
+          </div>
+        </section>
+        <section>
+          <div
+            class="slider relative w-full overflow-scroll bg-light s-KFrdkNUBHO0C"
+          >
+            <div class="slide-track flex s-KFrdkNUBHO0C">
+              <a
+                data-sveltekit-prefetch=""
+                href="/product/acme-cup"
+                class="slide relative h-[40vh] flex-none md:w-1/3 s-KFrdkNUBHO0C"
+                ><img
+                  alt="ACME Cup"
+                  class="h-full s-KFrdkNUBHO0C"
+                  decoding="async"
+                  loading="lazy"
+                  src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/Cup-front-black.png?v=1623159405"
+                />
+                <div
+                  class="absolute top-0 left-0 z-40 mt-32 ml-44 bg-black p-4 s-KFrdkNUBHO0C"
+                >
+                  ACME Cup
+                </div> </a
+              ><a
+                data-sveltekit-prefetch=""
+                href="/product/bomber-jacket"
+                class="slide relative h-[40vh] flex-none md:w-1/3 s-KFrdkNUBHO0C"
+                ><img
+                  alt="Bomber Jacket"
+                  class="h-full s-KFrdkNUBHO0C"
+                  decoding="async"
+                  loading="lazy"
+                  src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/bomber-jacket-0.png?v=1622902777"
+                />
+                <div
+                  class="absolute top-0 left-0 z-40 mt-32 ml-44 bg-black p-4 s-KFrdkNUBHO0C"
+                >
+                  Bomber Jacket
+                </div> </a
+              ><a
+                data-sveltekit-prefetch=""
+                href="/product/new-short-sleeve-t-shirt"
+                class="slide relative h-[40vh] flex-none md:w-1/3 s-KFrdkNUBHO0C"
+                ><img
+                  alt="New Short Sleeve T-Shirt"
+                  class="h-full s-KFrdkNUBHO0C"
+                  decoding="async"
+                  loading="lazy"
+                  src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/short-sleeve-t-shirt-0.png?v=1622902418"
+                />
+                <div
+                  class="absolute top-0 left-0 z-40 mt-32 ml-44 bg-black p-4 s-KFrdkNUBHO0C"
+                >
+                  New Short Sleeve T-Shirt
+                </div> </a
+              ><a
+                data-sveltekit-prefetch=""
+                href="/product/short-sleeve-t-shirt"
+                class="slide relative h-[40vh] flex-none md:w-1/3 s-KFrdkNUBHO0C"
+                ><img
+                  alt="Short Sleeve T-Shirt"
+                  class="h-full s-KFrdkNUBHO0C"
+                  decoding="async"
+                  loading="lazy"
+                  src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/short-sleeve-0.png?v=1622901991"
+                />
+                <div
+                  class="absolute top-0 left-0 z-40 mt-32 ml-44 bg-black p-4 s-KFrdkNUBHO0C"
+                >
+                  Short Sleeve T-Shirt
+                </div> </a
+              ><a
+                data-sveltekit-prefetch=""
+                href="/product/sticker"
+                class="slide relative h-[40vh] flex-none md:w-1/3 s-KFrdkNUBHO0C"
+                ><img
+                  alt="Sticker"
+                  class="h-full s-KFrdkNUBHO0C"
+                  decoding="async"
+                  loading="lazy"
+                  src="https://cdn.shopify.com/s/files/1/0434/0285/4564/products/Sticker-mock.png?v=1623256356"
+                />
+                <div
+                  class="absolute top-0 left-0 z-40 mt-32 ml-44 bg-black p-4 s-KFrdkNUBHO0C"
+                >
+                  Sticker
+                </div>
+              </a>
+            </div>
+          </div>
+          <!--<Carousel>-->
+        </section>
+        <section>
+          <div
+            class="flex flex-col px-8 py-20 text-white border border-black bg-dark lg:flex-row lg:items-center"
+          >
+            <div
+              class="flex-none mb-4 mr-8 text-3xl font-black text-left md:text-4xl lg:mb-0 lg:w-1/3 lg:text-right lg:text-6xl"
+            >
+              Shoppr.
+            </div>
+            <div>
+              <div class="lg:text-2xl">
+                <p>
+                  Welcome to the Next.js Enthusiast Webshop – the one-stop
+                  online shop for all things Next.js!
+                </p>
+                <p>
+                  Here, we're not just about selling merchandise. We're a
+                  community of passionate developers and enthusiasts who live
+                  and breathe Next.js. Our store is a celebration of the
+                  powerful JavaScript framework that has helped us create
+                  fantastic server-side rendering and static site generation
+                  applications.
+                </p>
+              </div>
+              <button
+                class="mt-4 font-bold text-svelteOrange hover:text-svelteDark lg:text-2xl"
+              >
+                Read it here
+              </button>
+            </div>
+          </div>
+        </section>
+        <section><div class="text-black"></div></section>
+      </main>
+      <!--<+page>-->
+      <div
+        class="flex w-full flex-col items-center justify-center border-t border-zinc-700 py-8 px-4"
+      >
+        <div class="flex items-center">
+          Deployed on
+          <a class="font-bold" href="https://vercel.com/home"
+            ><img src="/Vercel_Logo.png" alt="Vercel Logo" class="h-5 ml-1"
+          /></a>
+        </div>
+      </div>
+      <!--<Footer>-->
+    </div>
+  </main>
+  <!--<+layout>-->
+</div>
