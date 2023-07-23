@@ -12,9 +12,9 @@
   let showMenu = false;
 
   let tabs = [
-    { name: 'All', path: '/search' },
-    { name: 'Featured', path: '/search/featured' },
-    { name: 'Apparel', path: '/search/clothes' }
+    { name: 'All', path: '/search', automationTag: 'all-products-link' },
+    { name: 'Featured', path: '/search/featured', automationTag: 'featured-products-link' },
+    { name: 'Apparel', path: '/search/clothes', automationTag: 'apparel-products-link' },
   ];
   function openCart() {
     showMenu = false;
@@ -44,6 +44,7 @@
       {#each tabs as tab, i (tab.name)}
         <div class:active={currentRoute === tab.path}>
           <a
+            data-ui-automation-element={tab.automationTag}
             data-sveltekit-prefetch
             href={tab.path}
             class={`hover:opacity-100 px-2 py-1 text-white rounded-lg ${
@@ -112,6 +113,7 @@
               }}
             >
               <a
+                data-ui-automation-element={tab.automationTag}
                 data-sveltekit-prefetch
                 href={tab.path}
                 class={`hover:opacity-100 px-2 py-1 text-white font-bold text-xl rounded-lg ${
