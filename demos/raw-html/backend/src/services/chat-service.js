@@ -14,47 +14,53 @@ export class ChatService {
       }
 
       const systemContent = `
-      Given the HTML code sent by the user, your job is to write javascript selenium code given a user's request. Only output the code, and always use single quotes, except for the start and end of the javascript string returned.
+        Considering the user-provided HTML code, your task involves generating JavaScript commands based on the user's request. These JavaScript commands will be executed in the user's browser, facilitating navigational operations and input filling without requiring direct mouse or keyboard interactions. Please ensure the outputted code adheres to a structured JSON format, where each command forms an individual object within an array.
 
-      Example: Given the html code below:
-      
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Basic HTML Page</title>
-          <style>
-            button {
-              margin: 5px;
-              padding: 10px;
-              font-size: 18px;
-            }
-          </style>
-        </head>
-        <body>
-          <button id="button1">Button 1</button>
-          <button id="button2">Button 2</button>
-        </body>
-      </html>
-      
-      If the user asks "I want to click on button 1" you should reply with "document.getElementById('button1').click()" and nothing more. Please note that I used single-quotes for ('button1').
+        Each JavaScript command should be represented as a string and placed as a value in a key-value pair. The key should be a descriptive name for the command. Each of these key-value pairs should be placed in an object, and these objects should be placed in an array. Here is an example:
 
-      Here is the HTML code provided by the user:
-      ${htmlCode}
+        [
+          {
+            "command1": "document.getElementById('button1').click()"
+          },
+          {
+            "command2": "document.getElementById('button2').click()"
+          }
+        ]
+
+        Please remember to always use single quotes within the JavaScript code and double quotes for JSON. Do not include any semicolons as part of the JavaScript code.
+
+        Now, consider the following HTML code provided by the user:
+        ${htmlCode}
+
+        In the HTML code, certain data attributes are used to identify important elements. These attributes are specifically in the format of data-ui-automation-element=<identifier>. For example, data-ui-automation-element="search-button" would be a data attribute used to label a key element.
+
+        Moreover, when an identifier is shared between a standard element attribute (like an 'id') and a 'data-ui-automation-element' attribute, priority should always be given to the 'data-ui-automation-element' attribute. This means that even when you have multiple ways of selecting an element (like <button id=search-button>Click me</button> and <button data-ui-automation-element="search-button">Click me</Button>), you should always choose to select it using 'data-ui-automation-element="search-button"'.
+
+        Your task is to provide the requested automation in the JSON format described above. Please ensure the returned JSON is a string that can be directly parsed to a JavaScript object using JSON.parse().
       `
-
-      const openaiResult = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
+      
+      const fetch = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo-16k",
         messages: [
           { role: "system", content: systemContent },
           { role: "user", content: message }
         ],
-        temperature: 0.8,
+        temperature: 0.2,
         max_tokens: 500,
         top_p: 1,
       });
-      const aiAnswer = openaiResult.data.choices[0].message.content;
-
-      return openaiResult.data.choices[0].message.content
+      
+      let commandString = fetch.data.choices[0].message.content
+      
+      console.log(commandString)
+      
+      const result = {
+        commands: JSON.parse(commandString),
+        extra: "extraInfo"
+      }
+      
+      return result
+      
     } catch (error) {
       console.log('Service error:')
       console.log(error)
