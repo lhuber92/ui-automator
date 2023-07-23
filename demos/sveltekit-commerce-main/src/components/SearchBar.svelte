@@ -5,7 +5,19 @@
 
   let value = $page.url.searchParams.get('q');
 
+  if (typeof window !== 'undefined') {
+    window.updateInputValue = (id, newValue) => {
+    console.log('window.updateInputValue')
+    let element = document.getElementById(id);
+    element.value = newValue;
+    element.dispatchEvent(new Event('input')); // manually trigger the input event
+  };
+  }
+
+
+
   async function submit(e) {
+    e.preventDefault();
     let query = new URLSearchParams();
     if (value) {
       query.set('q', value);
@@ -16,10 +28,12 @@
 
 <form on:submit|preventDefault={submit} class="relative flex w-full items-center">
   <div class="absolute top-0 right-0 mr-2">
-    <Icons strokeColor="#fff" type="search" />
+    <button type="submit" aria-label="Submit Search" data-ui-automation-element="search-button">
+      <Icons strokeColor="#fff" type="search" />
+    </button>
   </div>
   <input
-    id="searchInput"
+    data-ui-automation-element="search-field"
     type="text"
     bind:value
     placeholder="Search for products..."
@@ -27,14 +41,3 @@
     class="w-full border border-white/30 bg-transparent p-2"
   />
 </form>
-
-<style>
-  form {
-    margin: 0px;
-    padding: 0px;
-    display: inline;
-  }
-  input::placeholder {
-    color: rgb(85, 85, 85);
-  }
-</style>

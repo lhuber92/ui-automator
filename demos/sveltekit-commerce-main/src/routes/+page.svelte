@@ -11,8 +11,6 @@
   $: featuredCollection = data.products[1]?.node?.products?.edges;
   console.log('111')
 
-  let htmlCode = "";
-
   onMount(() => {
     let bodyHTML = document.body.innerHTML;
     let domParser = new DOMParser();
@@ -25,7 +23,6 @@
     styles.forEach(style => style.parentNode.removeChild(style));
 
     htmlCode = docElement.body.innerHTML;
-    console.log(htmlCode)
   });
 </script>
 
@@ -53,7 +50,7 @@
       </div>
       <div>
         <div class="lg:text-2xl">
-          <p>Welcome to the Next.js Enthusiast Webshop – the one-stop online shop for all things Next.js!
+          <p>Welcome to the Next.js Enthusiast Webshop - the one-stop online shop for all things Next.js!
           </p>
           <p>Here, we're not just about selling merchandise. We're a community of passionate developers and enthusiasts who live and breathe Next.js. Our store is a celebration of the powerful JavaScript framework that has helped us create fantastic server-side rendering and static site generation applications.
           </p>
@@ -62,13 +59,6 @@
           Read it here
         </button>
       </div>
-    </div>
-  </section>
-  <section>
-    <div class="text-black">
-      {#if htmlCode} <!-- Only render ChatBox if htmlCode is populated -->
-        <ChatBox htmlCode={htmlCode} />
-      {/if}
     </div>
   </section>
 </main>

@@ -6,11 +6,13 @@
   import { getCartItems } from '../store';
   import { onMount } from 'svelte';
   import { createCart } from '$utils/shopify';
+  import ChatBox from '$components/ChatBox.svelte';
 
   let cartId;
   let checkoutUrl;
   let cartCreatedAt;
   let cartItems = [];
+  let htmlCode = "";
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
@@ -32,6 +34,18 @@
           showCart = false;
         }
       });
+
+      let bodyHTML = document.body.innerHTML;
+      let domParser = new DOMParser();
+      let docElement = domParser.parseFromString(bodyHTML, 'text/html');
+
+      // Remove script and style tags
+      let scripts = [...docElement.getElementsByTagName('script')];
+      let styles = [...docElement.getElementsByTagName('style')];
+      scripts.forEach(script => script.parentNode.removeChild(script));
+      styles.forEach(style => style.parentNode.removeChild(style));
+
+      htmlCode = docElement.body.innerHTML;
     }
   });
 
@@ -112,6 +126,13 @@
   <!-- <div class="min-h-screen overflow-scroll"> -->
     <div class="min-h-screen overflow-hidden">
     <slot />
+    <section>
+      <div class="text-black">
+        {#if htmlCode} <!-- Only render ChatBox if htmlCode is populated -->
+          <ChatBox htmlCode={htmlCode} />
+        {/if}
+      </div>
+    </section>
     <Footer />
   </div>
 </main>

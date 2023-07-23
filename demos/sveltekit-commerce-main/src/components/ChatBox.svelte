@@ -1,24 +1,56 @@
 <script>
   export let htmlCode;
 
-  async function generateJS() {
-    console.log(htmlCode)
-      const jsprompt = document.getElementById('jsprompt').value;
-      const response = await fetch('http://localhost:8200/chat/jsprompt', {
-          method: 'POST',
-          body: JSON.stringify({ jsprompt: jsprompt, htmlCode: htmlCode}),
-          headers: { 'Content-Type': 'application/json' },
-      });
-      
-      if (!response.ok) {
-          alert('Error generating JS code.');
-          return;
-      }
-      
-      const jsCode = (await response.text()).trim();
-      const jsCodeWithoutQuotes = jsCode.replace(/(^")|("$)/g, '');
+  window.updateInputValue = (selector, newValue) => {
+    let element = document.querySelector(selector);
+    element.value = newValue;
+    element.dispatchEvent(new Event('input')); // manually trigger the input event
+  };
 
-      eval(jsCodeWithoutQuotes); 
+  async function generateJS() {
+    const jsprompt = document.getElementById('jsprompt').value;
+    const response = await fetch('http://localhost:8200/chat/jsprompt', {
+        method: 'POST',
+        body: JSON.stringify({ jsprompt: jsprompt, htmlCode: htmlCode}),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    
+    if (!response.ok) {
+        alert('Error generating JS code.');
+        return;
+    }
+    
+    const responseJson = await response.json();
+
+
+    const commandObjects = responseJson.commands;
+
+    // const commandObjects = [
+    //   {
+    //     command: `document.querySelector('[data-ui-automation-element="search-field"]').value = 'jacket'`
+    //   },
+    //   {
+    //     command: `document.querySelector('[data-ui-automation-element="search-button"]').click()`
+    //   }
+    // ]
+
+    for (let commandObject of commandObjects) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    
+      for (let command in commandObject) {
+        // check if the command is an assignment to a DOM element's value
+        let commandString = commandObject[command];
+        let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
+        if (pattern.test(commandString)) {
+          console.log('aaa');
+          let [_, selector, value] = commandString.match(pattern);
+          window.updateInputValue(selector, value);
+        } else {
+          console.log('bb');
+          eval(commandString);
+        }
+      }
+    }
   }
 
   async function handleClick() {

@@ -58,7 +58,7 @@
     <SearchBar />
   </div>
   <div class="ml-auto flex items-center">
-    <button on:click={openCart} class="relative my-2 mx-4">
+    <button data-ui-automation-element="cart-button" on:click={openCart} class="relative my-2 mx-4">
       <Icons strokeColor="#fff" type="cart" />
       <div
         data-test="cart-quantity"
