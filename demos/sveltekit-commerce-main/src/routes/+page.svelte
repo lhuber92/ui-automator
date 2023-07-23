@@ -21,8 +21,6 @@
     let styles = [...docElement.getElementsByTagName('style')];
     scripts.forEach(script => script.parentNode.removeChild(script));
     styles.forEach(style => style.parentNode.removeChild(style));
-
-    htmlCode = docElement.body.innerHTML;
   });
 </script>
 
