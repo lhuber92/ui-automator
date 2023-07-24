@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
   import ThreeItemGrid from '$components/ThreeItemGrid.svelte';
   import Carousel from '$components/Carousel.svelte';
-  import ChatBox from '$components/ChatBox.svelte'; // Import ChatBox here
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -25,7 +24,7 @@
 </script>
 
 <svelte:head>
-  <title>Home – SvelteKit Commerce</title>
+  <title>Home - SvelteKit Commerce</title>
 </svelte:head>
 
 <main>

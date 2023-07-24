@@ -14,29 +14,37 @@ export class ChatService {
       }
 
       const systemContent = `
-        Considering the user-provided HTML code, your task involves generating JavaScript commands based on the user's request. These JavaScript commands will be executed in the user's browser, facilitating navigational operations and input filling without requiring direct mouse or keyboard interactions. Please ensure the outputted code adheres to a structured JSON format, where each command forms an individual object within an array.
+        Your task is to generate JavaScript commands that interact with a user's HTML based on their requests. These JavaScript commands should be created in such a way that they can be executed on a user's browser, handling actions like navigating the website and filling in inputs without the need for direct user interaction with the mouse or keyboard.
 
-        Each JavaScript command should be represented as a string and placed as a value in a key-value pair. The key should be a descriptive name for the command. Each of these key-value pairs should be placed in an object, and these objects should be placed in an array. Here is an example:
+        The format for these commands should be a JSON string that consists of an array of objects. Each object in the array should contain a single key-value pair, where the key is a description of the command, and the value is the actual JavaScript command represented as a string.
+        
+        The actual JavaScript command should be written in such a way that it interacts with the HTML elements using 'data-ui-automation-element' attributes. The value of these attributes will be used as the identifier for the JavaScript command to find the element it needs to interact with.
+        
+        Here's an example of how the JavaScript commands should be formatted based on a user input of "search for jackets, then click on the cart button":
 
         [
           {
-            "command1": "document.getElementById('button1').click()"
+              "fillSearch": "document.querySelector('[data-ui-automation-element="search-field"]').value = 'jacket'"
           },
           {
-            "command2": "document.getElementById('button2').click()"
+              "clickSearch": "document.querySelector('[data-ui-automation-element="search-button"]').click()"
+          },
+          {
+              "clickCart": "document.querySelector('[data-ui-automation-element="cart-button"]').click()"
           }
         ]
 
-        Please remember to always use single quotes within the JavaScript code and double quotes for JSON. Do not include any semicolons as part of the JavaScript code.
+        Please note that all strings within the JavaScript code should be wrapped in single quotes, while JSON strings should be wrapped in double quotes. Also, there should be no semicolons included in the JavaScript code.
 
-        Now, consider the following HTML code provided by the user:
+        You are now provided with the following HTML code from the user:
+        
         ${htmlCode}
 
-        In the HTML code, certain data attributes are used to identify important elements. These attributes are specifically in the format of data-ui-automation-element=<identifier>. For example, data-ui-automation-element="search-button" would be a data attribute used to label a key element.
+        In this HTML, the important elements are identified by 'data-ui-automation-element' attributes. For example, 'data-ui-automation-element="search-button"' would be used to identify a key element.
 
-        Moreover, when an identifier is shared between a standard element attribute (like an 'id') and a 'data-ui-automation-element' attribute, priority should always be given to the 'data-ui-automation-element' attribute. This means that even when you have multiple ways of selecting an element (like <button id=search-button>Click me</button> and <button data-ui-automation-element="search-button">Click me</Button>), you should always choose to select it using 'data-ui-automation-element="search-button"'.
-
-        Your task is to provide the requested automation in the JSON format described above. Please ensure the returned JSON is a string that can be directly parsed to a JavaScript object using JSON.parse().
+        Please remember that when selecting an element, you should always prioritize using the 'data-ui-automation-element' attribute over other attributes, even if other identifiers are available.
+        
+        Now, based on this HTML and the user's input, please provide a stringified JSON array of JavaScript commands that fulfill the user's request. The output should be formatted such that it can be directly parsed into a JavaScript object with JSON.parse().
       `
       
       const fetch = await openai.createChatCompletion({
