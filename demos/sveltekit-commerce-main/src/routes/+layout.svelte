@@ -13,6 +13,14 @@
   let cartCreatedAt;
   let cartItems = [];
 
+  if (typeof window !== 'undefined') {    
+    window.updateInputValue = (selector, newValue) => {
+      let element = document.querySelector(selector);
+      element.value = newValue;
+      element.dispatchEvent(new Event('input')); // manually trigger the input event
+    };
+  }
+
   onMount(async () => {
     if (typeof window !== 'undefined') {
       cartId = JSON.parse(localStorage.getItem('cartId'));

@@ -1,13 +1,4 @@
 <script>
-  export let htmlCode;
-
-  window.updateInputValue = (selector, newValue) => {
-    let element = document.querySelector(selector);
-    element.value = newValue;
-    element.dispatchEvent(new Event('input')); // manually trigger the input event
-  };
-
-
   const getHtmlCode = () => {
     const bodyHTML = document.body.innerHTML;
 
@@ -30,16 +21,16 @@
     });
 
     // Replace the body's HTML with the new HTML containing only the desired elements
-    htmlCode = container.innerHTML;
+    const htmlCode = container.innerHTML;
 
     return htmlCode
   }
 
-  const getCommands = async () => {
-    const staticCommands = false
+  const getCommand = async () => {
+    let commandObject
+    const staticCommand = false
 
-    let commandObjects
-    if (!staticCommands) {
+    if (!staticCommand) {
       const jsprompt = document.getElementById('jsprompt').value;
       const response = await fetch('http://localhost:8200/chat/jsprompt', {
         method: 'POST',
@@ -48,45 +39,42 @@
       });
       
       if (!response.ok) {
-          alert('Error generating JS code.');
-          return;
+        alert('Error generating JS code.');
+        return;
       }
       
-      const responseJson = await response.json();
-
-      commandObjects = responseJson.commands;
+      console.log(response)
+      commandObject = await response.json();
     } else {
-      commandObjects = [
-        {
-          clickApparelLink: `document.querySelector('[data-ui-automation-element="apparel-products-link"]').click()`
+      commandObject = {
+        commands: {
+          click: `document.querySelector('[data-ui-automation-element="new-short-sleeve-t-shirt"]').click()`
         },
-        {
-          clickTShirt: `document.querySelector('[data-test="grid-tile"] a[href="/product/short-sleeve-t-shirt"]').click()`
-        }
-      ]
+        extra: 'extraInfo'
+      }
     }
 
-    return commandObjects
+    return commandObject
   }
 
   async function generateJS() {
-    const commandObjects = await getCommands();
+    const commandObject = (await getCommand()).commands
+    const commandValue = Object.values(commandObject)[0];
+    console.log(commandObject)
+    console.log(commandValue)
+    let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
 
-    for (let commandObject of commandObjects) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log(document.querySelector('[data-ui-automation-element="search-field"]'))
+
+    // await new Promise(resolve => setTimeout(resolve, 1000))
     
-      for (let command in commandObject) {
-        // check if the command is an assignment to a DOM element's value
-        let commandString = commandObject[command];
-        let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
-        if (pattern.test(commandString)) {
-          let [_, selector, value] = commandString.match(pattern);
-          window.updateInputValue(selector, value);
-        } else {
-          console.log('bb');
-          eval(commandString);
-        }
-      }
+    if (pattern.test(commandValue)) {
+      console.log('Executing change input command')
+      let [_, selector, value] = commandValue.match(pattern);
+      window.updateInputValue(selector, value);
+    } else {
+      console.log('Executing normal command')
+      eval(commandValue);
     }
   }
 
@@ -94,3 +82,11 @@
     await generateJS();
   }
 </script>
+
+
+<div class="fixed right-4 bottom-4 bg-white border border-black p-4 z-50 rounded-lg shadow-lg">
+  <p class="text-sm text-gray-700 mb-2">UI Automator - Powered by Open AI API</p>
+
+  <input type="text" id="jsprompt" placeholder="Enter a command" class="w-full border mt-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+  <button on:click={handleClick} class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2">Do it for me!</button>
+</div>

@@ -24,7 +24,7 @@
     {href}
     data-sveltekit-prefetch
     class="focus:border-blue-500 focus:border-2 relative flex h-full w-full items-center justify-center"
-    data-ui-automation-element={href}
+    data-ui-automation-element={href.split('/').slice(-1)[0]}
   >
     <img
       alt={title}

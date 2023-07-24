@@ -5,17 +5,6 @@
 
   let value = $page.url.searchParams.get('q');
 
-  if (typeof window !== 'undefined') {
-    window.updateInputValue = (id, newValue) => {
-    console.log('window.updateInputValue')
-    let element = document.getElementById(id);
-    element.value = newValue;
-    element.dispatchEvent(new Event('input')); // manually trigger the input event
-  };
-  }
-
-
-
   async function submit(e) {
     e.preventDefault();
     let query = new URLSearchParams();

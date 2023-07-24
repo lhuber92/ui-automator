@@ -4,6 +4,15 @@ const openai = chatUtil.getOpenai()
 
 export class ChatService {
   async jsprompt(message, htmlCode) {
+    console.log(' * ')
+    console.log('***')
+    console.log('---')
+    console.log('USING HTML CONTEXT:')
+    console.log(htmlCode)
+    console.log('---')
+    console.log('***')
+    console.log(' * ')
+
     try {
       const harmful = await chatUtil.evaluateHarm(message);
       if (harmful || !chatUtil.validateInput(message)) {
@@ -14,41 +23,36 @@ export class ChatService {
       }
 
       const systemContent = `
-        Your task is to generate JavaScript commands that interact with a user's HTML based on their requests. These JavaScript commands should be created in such a way that they can be executed on a user's browser, handling actions like navigating the website and filling in inputs without the need for direct user interaction with the mouse or keyboard.
+        Your mission is to craft JavaScript commands that can interface with a user-provided HTML based on their specific requests. These commands should be designed to run in the user's browser, enabling tasks such as web page navigation and form filling without requiring direct input from the user's mouse or keyboard.
 
-        The format for these commands should be a JSON string that consists of an array of objects. Each object in the array should contain a single key-value pair, where the key is a description of the command, and the value is the actual JavaScript command represented as a string.
+        The desired commands should be formatted as a single JSON string. This string should represent an object containing one key-value pair. The key describes the nature of the command, while the value is the actual JavaScript command itself, depicted as a string.
         
-        The actual JavaScript command should be written in such a way that it interacts with the HTML elements using 'data-ui-automation-element' attributes. The value of these attributes will be used as the identifier for the JavaScript command to find the element it needs to interact with.
+        The JavaScript command should interact with the HTML elements using the 'data-ui-automation-element' attributes. These attributes serve as the identifiers that the JavaScript command uses to find the necessary element to interact with.
         
-        Here's an example of how the JavaScript commands should be formatted based on a user input of "search for jackets, then click on the cart button":
+        For instance, based on a user input of "search for jackets", the JavaScript command could be formatted like this:
+        
+        {
+          "fillSearch": "document.querySelector('[data-ui-automation-element="search-field"]').value = 'jacket'"
+        }
 
-        [
-          {
-              "fillSearch": "document.querySelector('[data-ui-automation-element="search-field"]').value = 'jacket'"
-          },
-          {
-              "clickSearch": "document.querySelector('[data-ui-automation-element="search-button"]').click()"
-          },
-          {
-              "clickCart": "document.querySelector('[data-ui-automation-element="cart-button"]').click()"
-          }
-        ]
+        Please ensure that all strings in the JavaScript code are surrounded by single quotes, while JSON strings should be wrapped in double quotes. Importantly, refrain from including any semicolons in the JavaScript code.
 
-        Please note that all strings within the JavaScript code should be wrapped in single quotes, while JSON strings should be wrapped in double quotes. Also, there should be no semicolons included in the JavaScript code.
-
-        You are now provided with the following HTML code from the user:
+        Now, take into consideration the following HTML code from the user:
         
         ${htmlCode}
 
-        In this HTML, the important elements are identified by 'data-ui-automation-element' attributes. For example, 'data-ui-automation-element="search-button"' would be used to identify a key element.
+        In this HTML, 'data-ui-automation-element' attributes are used to mark important elements. For instance, 'data-ui-automation-element="search-button"' could be utilized to identify a key element.
 
-        Please remember that when selecting an element, you should always prioritize using the 'data-ui-automation-element' attribute over other attributes, even if other identifiers are available.
+        Remember that when choosing an element, priority should always be given to the 'data-ui-automation-element' attribute over other attributes, even when other identifiers are available.
         
-        Now, based on this HTML and the user's input, please provide a stringified JSON array of JavaScript commands that fulfill the user's request. The output should be formatted such that it can be directly parsed into a JavaScript object with JSON.parse().
+        With this HTML and the user's input in mind, please generate a single JavaScript command in the aforementioned JSON format that caters to the user's request. This output should be a string that can be parsed directly into a JavaScript object using JSON.parse().
+        
+        This revised approach ensures that after executing one command, the client can make a subsequent fetch request to obtain the next command. This can cater to situations where executing one command might alter the HTML context, like navigating from one page to another.
       `
       
       const fetch = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo-16k",
+        model: "gpt-3.5-turbo",
+        // model: "gpt-4",
         messages: [
           { role: "system", content: systemContent },
           { role: "user", content: message }
