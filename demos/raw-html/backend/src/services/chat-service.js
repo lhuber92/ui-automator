@@ -23,32 +23,35 @@ export class ChatService {
       }
 
       const systemContent = `
-        Your mission is to craft JavaScript commands that can interface with a user-provided HTML based on their specific requests. These commands should be designed to run in the user's browser, enabling tasks such as web page navigation and form filling without requiring direct input from the user's mouse or keyboard.
+      Your task involves generating JavaScript commands that interact with a user's web page based on their requests. These commands should be structured to run in a user's browser, facilitating operations like website navigation and form filling, without requiring direct mouse or keyboard input from the user. The commands should be in a format that can be directly parsed into a JavaScript object using JSON.parse().
 
-        The desired commands should be formatted as a single JSON string. This string should represent an object containing one key-value pair. The key describes the nature of the command, while the value is the actual JavaScript command itself, depicted as a string.
-        
-        The JavaScript command should interact with the HTML elements using the 'data-ui-automation-element' attributes. These attributes serve as the identifiers that the JavaScript command uses to find the necessary element to interact with.
-        
-        For instance, based on a user input of "search for jackets", the JavaScript command could be formatted like this:
-        
-        {
-          "fillSearch": "document.querySelector('[data-ui-automation-element="search-field"]').value = 'jacket'"
-        }
+      First, let's consider the HTML provided by the user: ${htmlCode}
 
-        Please ensure that all strings in the JavaScript code are surrounded by single quotes, while JSON strings should be wrapped in double quotes. Importantly, refrain from including any semicolons in the JavaScript code.
+      The JavaScript commands should exclusively interact with HTML elements using 'data-ui-automation-element' attributes as identifiers. These identifiers help the JavaScript commands locate the appropriate elements to interact with. It is important that these identifiers in the commands exactly match those present in the provided HTML code.
 
-        Now, take into consideration the following HTML code from the user:
-        
-        ${htmlCode}
+      For instance, if the user asks to "search for jackets", two commands will be necessary: one to populate the search field, and another to simulate clicking the search button. The JSON string representing these commands would look as follows:
 
-        In this HTML, 'data-ui-automation-element' attributes are used to mark important elements. For instance, 'data-ui-automation-element="search-button"' could be utilized to identify a key element.
+      [
+      {
+        "fillSearch": "document.querySelector('[data-ui-automation-element="search-field"]').value = 'jacket'"
+      },
+      {
+        "clickSearch": "document.querySelector('[data-ui-automation-element="search-button"]').click()"
+      }
+      ]
 
-        Remember that when choosing an element, priority should always be given to the 'data-ui-automation-element' attribute over other attributes, even when other identifiers are available.
-        
-        With this HTML and the user's input in mind, please generate a single JavaScript command in the aforementioned JSON format that caters to the user's request. This output should be a string that can be parsed directly into a JavaScript object using JSON.parse().
-        
-        This revised approach ensures that after executing one command, the client can make a subsequent fetch request to obtain the next command. This can cater to situations where executing one command might alter the HTML context, like navigating from one page to another.
-      `
+      For any other user request not involving a search, a single command is sufficient. Even in these cases, this command should be enclosed in an array for consistency. For example:
+
+      [
+      {
+        "clickCartButton": "document.querySelector('[data-ui-automation-element="cart-button"]').click()"
+      }
+      ]
+
+      Please ensure that all strings within the JavaScript code use single quotes, and that JSON strings use double quotes. The JavaScript code should not include semicolons.
+
+      Based on the user's HTML and their requests, please provide an array of JavaScript commands that fulfill the user's requirements.`
+
       
       const fetch = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",

@@ -1,5 +1,21 @@
 <script>
+  import { nextCommand } from '../store';
+  import { navigating } from '$app/stores';
+
+  $: if ($navigating) {
+    // If nextCommand store has value, then execute the command
+    console.log($nextCommand)
+    if ($nextCommand) {
+      console.log('Next command:')
+      console.log($nextCommand)
+      document.getElementById('jsprompt').value = $nextCommand;
+      handleClick();
+      // nextCommand.set(null); // clear the store after command execution
+    }
+  }
+
   const getHtmlCode = () => {
+    console.log('getHtmlCode')
     const bodyHTML = document.body.innerHTML;
 
     const domParser = new DOMParser();
@@ -26,8 +42,8 @@
     return htmlCode
   }
 
-  const getCommand = async () => {
-    let commandObject
+  const getCommands = async () => {
+    let result
     const staticCommand = false
 
     if (!staticCommand) {
@@ -43,46 +59,59 @@
         return;
       }
       
-      console.log(response)
-      commandObject = await response.json();
+      result = await response.json();
     } else {
-      commandObject = {
-        commands: {
-          click: `document.querySelector('[data-ui-automation-element="new-short-sleeve-t-shirt"]').click()`
-        },
+      result = {
+        commands: [
+          {
+            click: `document.querySelector('[data-ui-automation-element="new-short-sleeve-t-shirt"]').click()`
+          }
+        ],
         extra: 'extraInfo'
       }
     }
 
-    return commandObject
+    return result
   }
 
   async function generateJS() {
-    const commandObject = (await getCommand()).commands
-    const commandValue = Object.values(commandObject)[0];
-    console.log(commandObject)
-    console.log(commandValue)
-    let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
+    const result = await getCommands()
+    const commandObjects = result.commands
 
-    console.log(document.querySelector('[data-ui-automation-element="search-field"]'))
+    if (commandObjects.length === 0) {
+      nextCommand.set(null)
+      alert('Done!')
+    }
 
-    // await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    if (pattern.test(commandValue)) {
-      console.log('Executing change input command')
-      let [_, selector, value] = commandValue.match(pattern);
-      window.updateInputValue(selector, value);
-    } else {
-      console.log('Executing normal command')
-      eval(commandValue);
+    for (const command of commandObjects) {
+      const commandValue = Object.values(command)[0];
+      console.log(commandObjects)
+      console.log(commandValue)
+      let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
+  
+      console.log(document.querySelector('[data-ui-automation-element="search-field"]'))
+  
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      if (pattern.test(commandValue)) {
+        console.log('Executing change input command')
+        let [_, selector, value] = commandValue.match(pattern);
+        window.updateInputValue(selector, value);
+      } else {
+        console.log('Executing normal command')
+        eval(commandValue);
+      }
     }
   }
 
-  async function handleClick() {
-    await generateJS();
+  export const handleClick = () => {
+    console.log('handleClick')
+    generateJS()
+    console.log('Setting next command:')
+    console.log(document.getElementById('jsprompt').value)
+    nextCommand.set(document.getElementById('jsprompt').value)
   }
 </script>
-
 
 <div class="fixed right-4 bottom-4 bg-white border border-black p-4 z-50 rounded-lg shadow-lg">
   <p class="text-sm text-gray-700 mb-2">UI Automator - Powered by Open AI API</p>
