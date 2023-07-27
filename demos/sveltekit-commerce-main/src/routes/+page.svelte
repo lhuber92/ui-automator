@@ -27,7 +27,7 @@
   <title>Home - SvelteKit Commerce</title>
 </svelte:head>
 
-<main>
+<main data-ui-automation-page="This the start page of the application">
   <section>
     <div class="lg:h-[90vh]">
       <ThreeItemGrid products={featuredCollection} />

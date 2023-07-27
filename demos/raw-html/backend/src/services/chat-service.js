@@ -3,15 +3,23 @@ const chatUtil = new ChatUtil()
 const openai = chatUtil.getOpenai()
 
 export class ChatService {
-  async jsprompt(message, htmlCode) {
+  async jsprompt(message, context) {
     console.log(' * ')
     console.log('***')
     console.log('---')
     console.log('USING HTML CONTEXT:')
-    console.log(htmlCode)
+    console.log(context)
     console.log('---')
     console.log('***')
     console.log(' * ')
+
+    const parsedContext = await JSON.parse(context)
+    if (parsedContext?.pageMetadata === "stop") {
+      return {
+        commands: [],
+        extra: "extraInfo"
+      }
+    }
 
     try {
       const harmful = await chatUtil.evaluateHarm(message);
@@ -25,7 +33,7 @@ export class ChatService {
       const systemContent = `
       Your task involves generating JavaScript commands that interact with a user's web page based on their requests. These commands should be structured to run in a user's browser, facilitating operations like website navigation and form filling, without requiring direct mouse or keyboard input from the user. The commands should be in a format that can be directly parsed into a JavaScript object using JSON.parse().
 
-      First, let's consider the HTML provided by the user: ${htmlCode}
+      First, let's consider the HTML provided by the user: ${context}
 
       The JavaScript commands should exclusively interact with HTML elements using 'data-ui-automation-element' attributes as identifiers. These identifiers help the JavaScript commands locate the appropriate elements to interact with. It is important that these identifiers in the commands exactly match those present in the provided HTML code.
 

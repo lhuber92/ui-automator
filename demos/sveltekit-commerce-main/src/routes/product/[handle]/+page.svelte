@@ -66,7 +66,7 @@
   <title>{data.body.product.title}</title>
 </svelte:head>
 
-<div>
+<div data-ui-automation-page={`stop`}>
   {#if data.body.product}
     <div class="flex flex-col md:flex-row">
       <div class="md:h-90 md:w-2/3">
@@ -100,6 +100,9 @@
         <div class="flex h-1/5 ">
           {#each data.body.product.images.edges as variant, i}
             <div
+              on:keydown={() => {
+                currentImageIndex = i;
+              }}
               on:click={() => {
                 currentImageIndex = i;
               }}
@@ -175,7 +178,7 @@
         />
       </div>
     </div>
-    <div class="px-4 py-8">
+    <div class="px-4 py-8" data-ui-automation-ignore="ignore">
       <div class="mb-4 text-3xl font-bold">Related Products</div>
       <ul class="grid grid-flow-row grid-cols-2 gap-4 md:grid-cols-4">
         {#each data.body.featuredProducts as product, i (product.node.id)}
