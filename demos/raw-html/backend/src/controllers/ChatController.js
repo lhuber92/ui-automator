@@ -5,8 +5,8 @@ const chatService = new ChatService()
 export class ChatController {
   async jsprompt(req, res, next) {
     try {
-      const { jsprompt, context } = req.body;
-      const answer = await chatService.jsprompt(jsprompt, context);
+      const { jsprompt, context, previousActions } = req.body;
+      const answer = await chatService.jsprompt(jsprompt, context, previousActions);
       res.status(200).send((JSON.stringify(answer)))
     } catch (error) {
       console.log(error)

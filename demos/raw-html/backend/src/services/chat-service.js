@@ -4,7 +4,7 @@ const chatUtil = new ChatUtil()
 const openai = chatUtil.getOpenai()
 
 export class ChatService {
-  async jsprompt(message, context) {
+  async jsprompt(message, context, previousActions) {
     console.log('jsprompt')
     const parsedContext = await JSON.parse(context)
 
@@ -36,8 +36,19 @@ export class ChatService {
       });
       
       let actionstring = fetch.data.choices[0].message.content
-      
+
       console.log(actionstring)
+      
+      const arraysEqual = function (a, b) {
+        return JSON.stringify(a) === JSON.stringify(b);
+      }
+
+      if (previousActions) {
+        if (arraysEqual(JSON.parse(actionstring), JSON.parse(previousActions))) {
+          console.log('DUPLICATE ACTION!')
+          actionstring = "[]"
+        }
+      }
       
       const result = {
         actions: JSON.parse(actionstring),

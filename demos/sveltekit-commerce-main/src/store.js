@@ -6,6 +6,7 @@ export const cartQuantity = writable('');
 export const cart = writable([]);
 export const search = writable('');
 export const nextAction = writable(null);
+export const previousActions = writable(null);
 
 export const getCartItems = async () => {
   let cartId = JSON.parse(localStorage.getItem('cartId'));

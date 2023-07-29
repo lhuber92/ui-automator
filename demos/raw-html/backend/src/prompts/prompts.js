@@ -44,7 +44,7 @@ export const prompt1 = (message, parsedContext) => {
   console.log('aaaa')
 return (
  `
-The goal is to generate JavaScript actions based on user's HTML and their requests. The actions should be in JSON format and use the 'data-ai-id' attributes of HTML elements to locate and interact with them. Make sure the JavaScript strings use single quotes and JSON strings use double quotes. No semicolons should be included in the JavaScript code.
+The goal is to generate JavaScript actions based on user's HTML and their requests. The actions should be in JSON format and use the 'data-ai-id' attributes of HTML elements to locate and interact with them. Make sure the JavaScript strings use single quotes and JSON strings use double quotes. No semicolons should be included in the JavaScript code. Double quotes inside JavaScript code strings should be escaped to avoid conflicts with the JSON formatting.
 
 Given the following array of HTML elements:
 
@@ -69,6 +69,8 @@ If the user requests "open the shopping cart", the action should be:
   }
 ]
 
+The "open the shopping cart" example is just an example, similar behaviour should be done for other requests.
+
 However, if the metadata for the current page says "You are now on a product page. If you are here, then do not create any more actions", no actions should be performed, regardless of the user request. In this case, return an empty array to represent that no actions are needed.
 
 In the current scenario, the metadata for the page is: ${JSON.stringify(parsedContext.pageMetadata)}.
@@ -80,3 +82,10 @@ Given this metadata and the array of HTML elements, interpret the user request "
 
 `)
 }
+
+
+// Works 29/7 18:16
+// open the shopping cart (from front page)
+// go to the front page (from search page)
+// find me a t-shirt (from front page -> search page -> product page) (sometimes after some browsing around)
+// click on the second product (from front page)

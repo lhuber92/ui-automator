@@ -1,6 +1,7 @@
 <script>
   import Icons from './Icons.svelte';
   import { createEventDispatcher } from 'svelte';
+  import { generateId } from '$utils/frontendUtils.js';
   const dispatch = createEventDispatcher();
   export let loading = false;
   export let items = [];
@@ -41,6 +42,7 @@
 
 <div
   on:click|self
+  on:keydown|self
   class="absolute inset-0 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50"
 >
   <div class="z-50 w-full bg-black p-6 md:w-1/2 lg:w-1/3 relative">
@@ -49,7 +51,13 @@
     {/if}
     <div class="mb-6 flex w-full items-center justify-between">
       <div class="text-2xl font-medium">My Cart</div>
-      <button on:click class="text-sm uppercase opacity-80 hover:opacity-100">close</button>
+      <button on:click
+        data-ai-type="button"
+        data-ai-info="This button will close the shopping cart."
+        data-ai-id={generateId(6)}
+        class="text-sm uppercase opacity-80 hover:opacity-100"
+      >
+        close</button>
     </div>
     {#if items.length === 0}
       <div class="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">

@@ -1,5 +1,5 @@
 <script>
-  import { nextAction } from '../store';
+  import { nextAction, previousActions } from '../store';
   import { navigating } from '$app/stores';
   import { generateId } from '$utils/frontendUtils.js'
 
@@ -64,7 +64,7 @@
       const jsprompt = document.getElementById('jsprompt').value;
       const response = await fetch('http://localhost:8200/chat/jsprompt', {
         method: 'POST',
-        body: JSON.stringify({ jsprompt: jsprompt, context: htmlCode}),
+        body: JSON.stringify({ jsprompt: jsprompt, context: htmlCode, previousActions: $previousActions}),
         headers: { 'Content-Type': 'application/json' },
       });
       
@@ -90,7 +90,11 @@
 
   async function generateJS() {
     const result = await getActions()
+
     const actionObjects = result.actions
+    previousActions.set(JSON.stringify(actionObjects))
+    console.log('previousActions')
+    console.log($previousActions)
 
     if (actionObjects.length === 0) {
       nextAction.set(null)
@@ -102,8 +106,10 @@
     for (const action of actionObjects) {
       const actionValue = Object.values(action)[0];
       let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
+      console.log('JS Code to execute:')
+      console.log(actionValue)
   
-      // await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
       if (pattern.test(actionValue)) {
         console.log('Executing change input action')
@@ -124,6 +130,8 @@
 
   export const handleRobotView = () => {
     const elements = getHtmlCode()
+    console.log('previousActions')
+    console.log($previousActions)
     console.log(elements)
   }
 </script>
