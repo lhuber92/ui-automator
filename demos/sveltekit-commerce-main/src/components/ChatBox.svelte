@@ -117,7 +117,7 @@
   }
 
   export const handleClick = async () => {
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise(resolve => setTimeout(resolve, 1000))
     await generateJS()
     nextAction.set(document.getElementById('jsprompt').value)
   }
