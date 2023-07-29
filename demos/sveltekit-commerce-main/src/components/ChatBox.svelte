@@ -5,7 +5,10 @@
 
   $: if ($navigating) {
     console.log($nextAction)
-    if ($nextAction) {
+    console.log('Box value')
+    if ($nextAction && document.getElementById('jsprompt').value) {
+      console.log('Doing action after navigation:', $nextAction)
+      console.log('Value in chatbox:', document.getElementById('jsprompt').value)
       handleClick();
     }
   }
@@ -91,14 +94,16 @@
 
     if (actionObjects.length === 0) {
       nextAction.set(null)
-      alert('Done!')
+      console.log('Done!')
+      console.log(document.getElementById('jsprompt'))
+      window.updateInputValue("#jsprompt", "");
     }
 
     for (const action of actionObjects) {
       const actionValue = Object.values(action)[0];
       let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
   
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // await new Promise(resolve => setTimeout(resolve, 1000))
       
       if (pattern.test(actionValue)) {
         console.log('Executing change input action')
