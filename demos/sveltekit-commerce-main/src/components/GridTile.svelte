@@ -1,4 +1,5 @@
 <script>
+  import { generateId } from '$utils/frontendUtils.js';
   export let title = '';
   export let removeLabels = false;
   export let imageSrc;
@@ -26,6 +27,7 @@
     class="focus:border-blue-500 focus:border-2 relative flex h-full w-full items-center justify-center"
     data-ai-type="link"
     data-ai-info={`Link that will send the user to ${href.split('/').slice(-1)[0]}`}
+    data-ai-id={generateId(6)}
   >
     <img
       alt={title}

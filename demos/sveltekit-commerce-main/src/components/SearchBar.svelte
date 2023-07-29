@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import Icons from './Icons.svelte';
+  import { generateId } from '$utils/frontendUtils.js';
 
   let value = $page.url.searchParams.get('q');
 
@@ -20,6 +21,7 @@
     <button type="submit" aria-label="Submit Search"
       data-ai-type="button"
       data-ai-info="This button will trigger a search, using the value of the search-input field."
+      data-ai-id={generateId(6)}
       >
       <Icons strokeColor="#fff" type="search" />
     </button>
@@ -27,6 +29,7 @@
   <input
     data-ai-type="input"
     data-ai-info="This input holds the value used to perform a search."
+    data-ai-id={generateId(6)}
     type="text"
     bind:value
     placeholder="Search for products..."

@@ -13,9 +13,9 @@
     function getElementObjects(uiAutomationElements) {
       const elementObjects = Array.from(uiAutomationElements).map(element => {
         return {
-          "data-ai-element-type": element.getAttribute('data-ai-type'),
+          "data-ai-type": element.getAttribute('data-ai-type'),
           "data-ai-info": element.getAttribute('data-ai-info'),
-          "id": generateId(6)
+          "data-ai-id": element.getAttribute('data-ai-id')
         };
       });
 
@@ -61,7 +61,7 @@
       const jsprompt = document.getElementById('jsprompt').value;
       const response = await fetch('http://localhost:8200/chat/jsprompt', {
         method: 'POST',
-        body: JSON.stringify({ jsprompt: jsprompt, htmlCode: htmlCode}),
+        body: JSON.stringify({ jsprompt: jsprompt, context: htmlCode}),
         headers: { 'Content-Type': 'application/json' },
       });
       
@@ -75,8 +75,8 @@
       result = {
         actions: [
           {
-            click: `document.querySelector('[data-ai="new-short-sleeve-t-shirt"]').click()`
-          }
+            clickTShirtLink: `document.querySelector('[data-ai-info="Link that will send the user to short-sleeve-t-shirt"]').click()`
+          },
         ],
         extra: 'extraInfo'
       }
@@ -87,7 +87,7 @@
 
   async function generateJS() {
     const result = await getactions()
-    const actionObjects = result.commands
+    const actionObjects = result.actions
 
     if (actionObjects.length === 0) {
       nextAction.set(null)

@@ -14,12 +14,6 @@ export class ChatService {
     console.log(' * ')
 
     const parsedContext = await JSON.parse(context)
-    if (parsedContext?.pageMetadata === "stop") {
-      return {
-        commands: [],
-        extra: "extraInfo"
-      }
-    }
 
     try {
       const harmful = await chatUtil.evaluateHarm(message);
@@ -31,34 +25,64 @@ export class ChatService {
       }
 
       const systemContent = `
-      Your task involves generating JavaScript commands that interact with a user's web page based on their requests. These commands should be structured to run in a user's browser, facilitating operations like website navigation and form filling, without requiring direct mouse or keyboard input from the user. The commands should be in a format that can be directly parsed into a JavaScript object using JSON.parse().
+      Your task involves generating JavaScript actions that interact with a user's web page based on their requests. These actions should be structured to run in a user's browser, facilitating operations like website navigation and form filling, without requiring direct mouse or keyboard input from the user. The actions should be in a format that can be directly parsed into a JavaScript object using JSON.parse().
 
-      First, let's consider the HTML provided by the user: ${context}
+      Here is the metadata about the page that the command was sent from, place a lot of weight on the content of the metadata when evaluating what JavaScript actions to generate, if any at all. For example, if the metadata says something like "You are now on a product page. If you are here, then do not create any more actions" then you should not generate any actions and instead return an empty array.
 
-      The JavaScript commands should exclusively interact with HTML elements using 'data-ui-automation-element' attributes as identifiers. These identifiers help the JavaScript commands locate the appropriate elements to interact with. It is important that these identifiers in the commands exactly match those present in the provided HTML code.
+      Metadata: ${parsedContext.pageMetadata}
 
-      For instance, if the user asks to "search for jackets", two commands will be necessary: one to populate the search field, and another to simulate clicking the search button. The JSON string representing these commands would look as follows:
+      Now, let's consider the HTML elements provided by the user as an array that contains the element type, info for the element, and the id that will be used for selecting the element: ${JSON.stringify(parsedContext.elementObjects)}
+
+      Elements with the type 'content' are only providing info about an element, it can not be used to perform any actions.
+
+      The JavaScript actions should exclusively interact with HTML elements using the values in the 'data-ai-id' attributes as identifiers. These identifiers help the JavaScript actions locate the appropriate elements to interact with. It is important that these identifiers in the actions exactly match those present in the provided HTML code.
+
+For example, to select the following element you would do a document.querySelector('[data-ai-id="S5Eba7"]'):
+
+{
+  'data-ai-type': 'link',
+  'data-ai-info': 'This link will send the user to the start-page.',
+  'data-ai-id': 'S5Eba7'
+},
+
+      For instance, if the user asks to "search for jackets", two actions will be necessary: one to populate the search field (that in this example has a data-ai-id of "123"), and another to simulate clicking the search button (that in this example has a data-ai-id of "456"). The JSON string representing these actions would look as follows:
 
       [
       {
-        "fillSearch": "document.querySelector('[data-ui-automation-element="search-field"]').value = 'jacket'"
+        "fillSearch": "document.querySelector('[data-ai-id="123"]').value = 'jacket'"
       },
       {
-        "clickSearch": "document.querySelector('[data-ui-automation-element="search-button"]').click()"
+        "clickSearch": "document.querySelector('[data-ai-id="456"]').click()"
       }
       ]
 
-      For any other user request not involving a search, a single command is sufficient. Even in these cases, this command should be enclosed in an array for consistency. For example:
+      For any other user request not involving a search, a single command is sufficient. Even in these cases, this command should be enclosed in an array for consistency. For example, clicking on a button that will open the shopping cart will look like the below if the button has a data-ai-id of "789":
 
       [
       {
-        "clickCartButton": "document.querySelector('[data-ui-automation-element="cart-button"]').click()"
+        "clickCartButton": "document.querySelector('[data-ai-id="789"]').click()"
       }
       ]
 
       Please ensure that all strings within the JavaScript code use single quotes, and that JSON strings use double quotes. The JavaScript code should not include semicolons.
 
-      Based on the user's HTML and their requests, please provide an array of JavaScript commands that fulfill the user's requirements.`
+      Based on the user's HTML and their requests, please provide an array of JavaScript actions that fulfill the user's requirements.
+      
+      If the metadata provided says "You are now on a product page. If you are here, then do not create any more actions" or something similar, do not generate any actions and instead return an empty array. For example:
+
+      Metadata: You are now on a product page. If you are here, then do not create any more actions
+      
+      The correct response in this case would be:
+      
+      []
+      
+      
+      `
+
+      console.log('*****')
+      console.log(systemContent)
+      console.log(systemContent)
+      console.log('*****')
 
       
       const fetch = await openai.createChatCompletion({
@@ -68,17 +92,17 @@ export class ChatService {
           { role: "system", content: systemContent },
           { role: "user", content: message }
         ],
-        temperature: 0.2,
+        temperature: 0.8,
         max_tokens: 500,
         top_p: 1,
       });
       
-      let commandString = fetch.data.choices[0].message.content
+      let actionstring = fetch.data.choices[0].message.content
       
-      console.log(commandString)
+      console.log(actionstring)
       
       const result = {
-        commands: JSON.parse(commandString),
+        actions: JSON.parse(actionstring),
         extra: "extraInfo"
       }
       

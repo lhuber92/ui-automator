@@ -4,6 +4,7 @@
   import { cartQuantity } from '../store';
   import SearchBar from '$components/SearchBar.svelte';
   import { createEventDispatcher } from 'svelte';
+  import { generateId } from '$utils/frontendUtils.js';
 
   const dispatch = createEventDispatcher();
 
@@ -28,6 +29,7 @@
       <a 
         data-ai-type="link"
         data-ai-info="This link will send the user to the start-page."
+        data-ai-id={generateId(6)}
         href="/" data-sveltekit-prefetch class=""
       >
         <picture>
@@ -50,6 +52,7 @@
           <a
             data-ai-type="link"
             data-ai-info={`This link will redirect the user to the page for ${tab.automationTag}.`}
+            data-ai-id={generateId(6)}
             data-sveltekit-prefetch
             href={tab.path}
             class={`hover:opacity-100 px-2 py-1 text-white rounded-lg ${
@@ -67,6 +70,7 @@
     <button 
       data-ai-type="button"
       data-ai-info="This button will open the shopping cart of the user."
+      data-ai-id={generateId(6)}
       on:click={openCart} 
       class="relative my-2 mx-4"
     >
