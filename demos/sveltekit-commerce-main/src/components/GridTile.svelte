@@ -24,7 +24,8 @@
     {href}
     data-sveltekit-prefetch
     class="focus:border-blue-500 focus:border-2 relative flex h-full w-full items-center justify-center"
-    data-ui-automation-element={href.split('/').slice(-1)[0]}
+    data-ai-type="link"
+    data-ai-info={`Link that will send the user to ${href.split('/').slice(-1)[0]}`}
   >
     <img
       alt={title}

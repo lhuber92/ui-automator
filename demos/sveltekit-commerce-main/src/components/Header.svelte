@@ -25,7 +25,11 @@
 <nav class="flex items-center border-b border-zinc-700 p-4 lg:px-6">
   <div class="flex w-1/3 items-center">
     <div class="mr-4" class:active={currentRoute === '/'}>
-      <a data-ui-automation-element="home-page-icon" href="/" data-sveltekit-prefetch class="">
+      <a 
+        data-ai-type="link"
+        data-ai-info="This link will send the user to the start-page."
+        href="/" data-sveltekit-prefetch class=""
+      >
         <picture>
           <source srcset="/svelte_logo.png" type="image/png" />
           <img
@@ -44,7 +48,8 @@
       {#each tabs as tab, i (tab.name)}
         <div class:active={currentRoute === tab.path}>
           <a
-            data-ui-automation-element={tab.automationTag}
+            data-ai-type="link"
+            data-ai-info={`This link will redirect the user to the page for ${tab.automationTag}.`}
             data-sveltekit-prefetch
             href={tab.path}
             class={`hover:opacity-100 px-2 py-1 text-white rounded-lg ${
@@ -59,7 +64,12 @@
     <SearchBar />
   </div>
   <div class="ml-auto flex items-center">
-    <button data-ui-automation-element="cart-button" on:click={openCart} class="relative my-2 mx-4">
+    <button 
+      data-ai-type="button"
+      data-ai-info="This button will open the shopping cart of the user."
+      on:click={openCart} 
+      class="relative my-2 mx-4"
+    >
       <Icons strokeColor="#fff" type="cart" />
       <div
         data-test="cart-quantity"
@@ -80,9 +90,8 @@
   </div>
   {#if showMenu}
     <div
-      on:click|self={() => {
-        showMenu = false;
-      }}
+      on:keydown={() => { showMenu = false; }}
+      on:click|self={() => { showMenu = false; }}
       class="absolute inset-0 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50 lg:hidden"
     >
       <div class="z-30 w-full bg-black p-6 md:w-1/2 lg:w-1/3">
@@ -108,9 +117,8 @@
           {#each tabs as tab, i (tab.name)}
             <div
               class:active={currentRoute === tab.path}
-              on:click={() => {
-                showMenu = false;
-              }}
+              on:click={() => { showMenu = false; }}
+              on:keydown={() => { showMenu = false; }}
             >
               <a
                 data-ui-automation-element={tab.automationTag}

@@ -66,14 +66,19 @@
   <title>{data.body.product.title}</title>
 </svelte:head>
 
-<div data-ui-automation-page={`stop`}>
+<div>
   {#if data.body.product}
-    <div class="flex flex-col md:flex-row">
+    <div 
+      class="flex flex-col md:flex-row" 
+      data-ai-type={"metadata"}
+      data-ai-info={"You are now on a product page."}
+    >
       <div class="md:h-90 md:w-2/3">
         {#key highlightedImageSrc}
           <div class="relative h-4/5 bg-light">
             <GridTile
-              title={data.body.product.title}
+            data-ai-type="content"
+            data-ai-info={"This is a element displaying the product that is on the focus of a product page."}
               price={data.body.product.priceRange.maxVariantPrice.amount}
               currencyCode={data.body.product.priceRange.maxVariantPrice.currencyCode}
               imageSrc={highlightedImageSrc}
@@ -97,7 +102,7 @@
             {/if}
           </div>
         {/key}
-        <div class="flex h-1/5 ">
+        <div class="flex h-1/5 " data-ai-type="ignore">
           {#each data.body.product.images.edges as variant, i}
             <div
               on:keydown={() => {
@@ -178,7 +183,7 @@
         />
       </div>
     </div>
-    <div class="px-4 py-8" data-ui-automation-ignore="ignore">
+    <div class="px-4 py-8" data-ai-type="ignore">
       <div class="mb-4 text-3xl font-bold">Related Products</div>
       <ul class="grid grid-flow-row grid-cols-2 gap-4 md:grid-cols-4">
         {#each data.body.featuredProducts as product, i (product.node.id)}

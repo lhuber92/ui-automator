@@ -17,12 +17,16 @@
 
 <form on:submit|preventDefault={submit} class="relative flex w-full items-center">
   <div class="absolute top-0 right-0 mr-2">
-    <button type="submit" aria-label="Submit Search" data-ui-automation-element="search-button">
+    <button type="submit" aria-label="Submit Search"
+      data-ai-type="button"
+      data-ai-info="This button will trigger a search, using the value of the search-input field."
+      >
       <Icons strokeColor="#fff" type="search" />
     </button>
   </div>
   <input
-    data-ui-automation-element="search-field"
+    data-ai-type="input"
+    data-ai-info="This input holds the value used to perform a search."
     type="text"
     bind:value
     placeholder="Search for products..."
