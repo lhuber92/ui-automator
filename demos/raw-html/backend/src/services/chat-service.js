@@ -4,15 +4,6 @@ const openai = chatUtil.getOpenai()
 
 export class ChatService {
   async jsprompt(message, context) {
-    console.log(' * ')
-    console.log('***')
-    console.log('---')
-    console.log('USING HTML CONTEXT:')
-    console.log(context)
-    console.log('---')
-    console.log('***')
-    console.log(' * ')
-
     const parsedContext = await JSON.parse(context)
 
     try {
@@ -25,74 +16,53 @@ export class ChatService {
       }
 
       const systemContent = `
-      Your task involves generating JavaScript actions that interact with a user's web page based on their requests. These actions should be structured to run in a user's browser, facilitating operations like website navigation and form filling, without requiring direct mouse or keyboard input from the user. The actions should be in a format that can be directly parsed into a JavaScript object using JSON.parse().
+      The goal is to generate JavaScript actions based on user's HTML and their requests. The actions should be in JSON format and use the 'data-ai-id' attributes of HTML elements to locate and interact with them. Make sure the JavaScript strings use single quotes and JSON strings use double quotes. No semicolons should be included in the JavaScript code.
 
-      Here is the metadata about the page that the command was sent from, place a lot of weight on the content of the metadata when evaluating what JavaScript actions to generate, if any at all. For example, if the metadata says something like "You are now on a product page. If you are here, then do not create any more actions" then you should not generate any actions and instead return an empty array.
-
-      Metadata: ${parsedContext.pageMetadata}
-
-      Now, let's consider the HTML elements provided by the user as an array that contains the element type, info for the element, and the id that will be used for selecting the element: ${JSON.stringify(parsedContext.elementObjects)}
-
-      Elements with the type 'content' are only providing info about an element, it can not be used to perform any actions.
-
-      The JavaScript actions should exclusively interact with HTML elements using the values in the 'data-ai-id' attributes as identifiers. These identifiers help the JavaScript actions locate the appropriate elements to interact with. It is important that these identifiers in the actions exactly match those present in the provided HTML code.
-
-For example, to select the following element you would do a document.querySelector('[data-ai-id="S5Eba7"]'):
-
-{
-  'data-ai-type': 'link',
-  'data-ai-info': 'This link will send the user to the start-page.',
-  'data-ai-id': 'S5Eba7'
-},
-
-      For instance, if the user asks to "search for jackets", two actions will be necessary: one to populate the search field (that in this example has a data-ai-id of "123"), and another to simulate clicking the search button (that in this example has a data-ai-id of "456"). The JSON string representing these actions would look as follows:
-
-      [
-      {
-        "fillSearch": "document.querySelector('[data-ai-id="123"]').value = 'jacket'"
-      },
-      {
-        "clickSearch": "document.querySelector('[data-ai-id="456"]').click()"
-      }
-      ]
-
-      For any other user request not involving a search, a single command is sufficient. Even in these cases, this command should be enclosed in an array for consistency. For example, clicking on a button that will open the shopping cart will look like the below if the button has a data-ai-id of "789":
-
-      [
-      {
-        "clickCartButton": "document.querySelector('[data-ai-id="789"]').click()"
-      }
-      ]
-
-      Please ensure that all strings within the JavaScript code use single quotes, and that JSON strings use double quotes. The JavaScript code should not include semicolons.
-
-      Based on the user's HTML and their requests, please provide an array of JavaScript actions that fulfill the user's requirements.
+      Given the following array of HTML elements:
       
-      If the metadata provided says "You are now on a product page. If you are here, then do not create any more actions" or something similar, do not generate any actions and instead return an empty array. For example:
-
-      Metadata: You are now on a product page. If you are here, then do not create any more actions
+      ${JSON.stringify(parsedContext.elementObjects)}
       
-      The correct response in this case would be:
+      If the user requests "search for jackets", the actions should be:
+      
+      [
+        {
+          "fillSearch": "document.querySelector('[data-ai-id="7nsBzj"]').value = 'jackets'"
+        },
+        {
+          "clickSearch": "document.querySelector('[data-ai-id="txDFRk"]').click()"
+        }
+      ]
+      
+      If the user requests "open the shopping cart", the action should be:
+      
+      [
+        {
+          "clickCartButton": "document.querySelector('[data-ai-id="TIxtmj"]').click()"
+        }
+      ]
+      
+      However, if the metadata for the current page says "You are now on a product page. If you are here, then do not create any more actions", no actions should be performed, regardless of the user request. In this case, return an empty array to represent that no actions are needed. The format for this would be:
       
       []
+      
+      In the current scenario, the metadata for the page is: ${JSON.stringify(parsedContext.pageMetadata)}. Given this metadata, what actions should be performed in response to any user request: "${message}"?
+      
       
       
       `
 
-      console.log('*****')
+      console.log('********************************************************************************************')
       console.log(systemContent)
-      console.log(systemContent)
-      console.log('*****')
+      console.log('############################################################################################')
 
-      
       const fetch = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         // model: "gpt-4",
         messages: [
           { role: "system", content: systemContent },
-          { role: "user", content: message }
+          // { role: "user", content: message }
         ],
-        temperature: 0.8,
+        temperature: 0,
         max_tokens: 500,
         top_p: 1,
       });

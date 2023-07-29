@@ -2,13 +2,13 @@
   import { onMount } from 'svelte';
   import ThreeItemGrid from '$components/ThreeItemGrid.svelte';
   import Carousel from '$components/Carousel.svelte';
+  import { generateId } from '$utils/frontendUtils.js';
 
   /** @type {import('./$types').PageData} */
   export let data;
 
   $: clothesCollection = data.products[0]?.node?.products?.edges;
   $: featuredCollection = data.products[1]?.node?.products?.edges;
-  console.log('111')
 
   onMount(() => {
     let bodyHTML = document.body.innerHTML;
@@ -27,7 +27,11 @@
   <title>Home - SvelteKit Commerce</title>
 </svelte:head>
 
-<main data-ui-automation-page="This the start page of the application">
+<main
+  data-ai-type="metadata"
+  data-ai-info="This is the front page of the website."
+  data-ai-id={generateId(6)}
+>
   <section>
     <div class="lg:h-[90vh]">
       <ThreeItemGrid products={featuredCollection} />

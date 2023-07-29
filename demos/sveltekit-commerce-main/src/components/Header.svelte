@@ -125,7 +125,9 @@
               on:keydown={() => { showMenu = false; }}
             >
               <a
-                data-ui-automation-element={tab.automationTag}
+                data-ai-type="link"
+                data-ai-info={`This link will redirect the user to the page for ${tab.automationTag}.`}
+                data-ai-id={generateId(6)}
                 data-sveltekit-prefetch
                 href={tab.path}
                 class={`hover:opacity-100 px-2 py-1 text-white font-bold text-xl rounded-lg ${

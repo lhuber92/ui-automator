@@ -1,6 +1,8 @@
 <script>
   import GridTile from '$components/GridTile.svelte';
   import { page } from '$app/stores';
+  import { generateId } from '$utils/frontendUtils.js';
+
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -13,7 +15,11 @@
     : data.body.allProducts.edges;
 </script>
 
-<div data-ui-automation-page="This is a page displaying several products">
+<div 
+  data-ai-type="metadata"
+  data-ai-info="This is a page displaying several products, do not search for products when you are on this page. Instead, click on one of the elements."
+  data-ai-id={generateId(6)}
+>
   <ul class="grid grid-flow-row gap-4 sm:grid-cols-2 md:grid-cols-3">
     {#each displayedProducts as product, i (product.node.id)}
       <li>

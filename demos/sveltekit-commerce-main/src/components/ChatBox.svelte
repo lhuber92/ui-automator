@@ -51,7 +51,7 @@
     }
 
 
-  const getactions = async () => {
+  const getActions = async () => {
     let result
     const staticAction = false
 
@@ -86,7 +86,7 @@
   }
 
   async function generateJS() {
-    const result = await getactions()
+    const result = await getActions()
     const actionObjects = result.actions
 
     if (actionObjects.length === 0) {
@@ -96,8 +96,6 @@
 
     for (const action of actionObjects) {
       const actionValue = Object.values(action)[0];
-      console.log(actionObjects)
-      console.log(actionValue)
       let pattern = /document.querySelector\('(.*)'\).value = '(.*)'/;
   
       await new Promise(resolve => setTimeout(resolve, 1000))
@@ -113,8 +111,9 @@
     }
   }
 
-  export const handleClick = () => {
-    generateJS()
+  export const handleClick = async () => {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    await generateJS()
     nextAction.set(document.getElementById('jsprompt').value)
   }
 
